@@ -49,6 +49,7 @@ class Position:
             list: La liste des deux positions.
 
         """
+        return "À changer"
         #TODO: À compléter
 
     def quatre_positions_diagonales(self):
