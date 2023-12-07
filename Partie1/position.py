@@ -49,7 +49,7 @@ class Position:
             list: La liste des deux positions.
 
         """
-        #TODO: À compléter
+        return [Position(self.ligne - 1, self.colonne - 1), Position(self.ligne - 1, self.colonne + 1)]
 
     def quatre_positions_diagonales(self):
         """Retourne une liste contenant les quatre positions diagonales à partir de la position actuelle.
@@ -58,7 +58,8 @@ class Position:
             list: La liste des quatre positions.
 
         """
-        #TODO: À compléter
+        return [self.positions_diagonales_bas()[0], self.positions_diagonales_bas()[1],
+                self.positions_diagonales_haut()[0], self.positions_diagonales_haut()[1]]
 
     def quatre_positions_sauts(self):
         """Retourne une liste contenant les quatre "sauts" diagonaux à partir de la position actuelle. Les positions
@@ -66,9 +67,15 @@ class Position:
 
         Returns:
             list: La liste des quatre positions.
-
         """
-        #TODO: À compléter
+        bas_gauche = self.positions_diagonales_bas()[0]
+        bas_droite = self.positions_diagonales_bas()[1]
+        haut_gauche = self.positions_diagonales_haut()[0]
+        haut_droite = self.positions_diagonales_haut()[1]
+        return [Position(bas_gauche.ligne + 1, bas_gauche.colonne - 1),
+                Position(bas_droite.ligne + 1, bas_droite.colonne + 1),
+                Position(haut_gauche.ligne - 1, haut_gauche.colonne - 1),
+                Position(haut_droite.ligne - 1, haut_droite.colonne + 1)]
 
     def __eq__(self, other):
         """Méthode spéciale indiquant à Python comment vérifier si deux positions sont égales. On compare simplement
@@ -97,6 +104,17 @@ class Position:
 
 if __name__ == '__main__':
     print('Test unitaires de la classe "Position"...')
+
+    pos = Position(3, 5)
+    assert pos.quatre_positions_diagonales()[0].ligne == 4
+    assert pos.quatre_positions_diagonales()[0].colonne == 4
+    assert pos.quatre_positions_diagonales()[3].ligne == 2
+    print("quatre_positions_diagonales OK")
+
+    assert pos.quatre_positions_sauts()[0].ligne == 5
+    assert pos.quatre_positions_sauts()[0].colonne == 3
+    assert pos.quatre_positions_sauts()[3].ligne == 1
+    print("quatre_positions_sauts OK")
 
     # TODO: À compléter
 
