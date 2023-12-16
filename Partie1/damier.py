@@ -131,14 +131,19 @@ class Damier:
         """
         piece = self.recuperer_piece_a_position(position_piece)
         piece_sur_cible = self.recuperer_piece_a_position(position_cible)
-        if not piece or not self.position_est_dans_damier(position_cible) or piece_sur_cible:
-            return False
         position_a_manger = position_piece.position_a_manger(position_cible)
-        if position_a_manger and self.recuperer_piece_a_position(
-                position_a_manger).type_de_piece != piece.type_de_piece:
+
+        if (not piece
+                or not self.position_est_dans_damier(position_cible)
+                or piece_sur_cible
+                or position_cible not in position_piece.quatre_positions_sauts()):
             return False
-        print(position_a_manger)
-        # if position_cible in position_piece.quatre_positions_sauts():
+
+        if position_a_manger:
+            piece_a_manger = self.recuperer_piece_a_position(position_a_manger)
+            if piece_a_manger and piece_a_manger.couleur == piece.couleur:
+                return False
+        return True
 
     def piece_peut_se_deplacer(self, position_piece):
         """Vérifie si une pièce à une certaine position a la possibilité de se déplacer (sans faire de saut).
@@ -271,8 +276,14 @@ if __name__ == "__main__":
     print('Test piece_peut_se_deplacer_vers succès!')
     damier.cases.pop(Position(6, 3))
 
-    damier.piece_peut_sauter_vers(Position(4, 5), Position(6, 3))
-    
+    assert damier.piece_peut_sauter_vers(Position(4, 5), Position(6, 3)) is False
+    assert damier.piece_peut_sauter_vers(Position(4, 5), Position(2, 7)) is False
+    assert damier.piece_peut_sauter_vers(Position(4, 5), Position(3, 6)) is False
+    assert damier.piece_peut_sauter_vers(Position(4, 5), Position(5, 4)) is False
+
+    damier.cases[Position(5, 4)] = Piece('noir', 'pion')
+    assert damier.piece_peut_sauter_vers(Position(4, 5), Position(6, 3)) is True
+
     print('Test piece_peut_sauter_vers succès!')
 
     print('Test unitaires passés avec succès!')

@@ -79,6 +79,14 @@ class Position:
                 Position(haut_droite.ligne - 1, haut_droite.colonne + 1)]
 
     def position_a_manger(self, position_saut):
+        """
+
+        Args:
+            position_saut: Position ou l'on veut sauter
+
+        Returns:
+                Position: la position qui est entre le pion et la position de saut
+        """
         direction_manger = self - position_saut
         return Position(self.ligne + int(direction_manger.ligne / abs(direction_manger.ligne)),
                         self.colonne + int(direction_manger.colonne / abs(direction_manger.colonne)))
