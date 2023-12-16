@@ -125,6 +125,17 @@ if __name__ == '__main__':
     print('Test unitaires de la classe "Position"...')
 
     pos = Position(3, 5)
+
+    assert pos.positions_diagonales_bas()[0].ligne == 4
+    assert pos.positions_diagonales_bas()[0].colonne == 4
+    assert pos.positions_diagonales_bas()[1].colonne == 6
+    print("positions_diagonales_bas OK")
+
+    assert pos.positions_diagonales_haut()[0].ligne == 2
+    assert pos.positions_diagonales_haut()[0].colonne == 4
+    assert pos.positions_diagonales_haut()[1].colonne == 6
+    print("positions_diagonales_haut OK")
+
     assert pos.quatre_positions_diagonales()[0].ligne == 4
     assert pos.quatre_positions_diagonales()[0].colonne == 4
     assert pos.quatre_positions_diagonales()[3].ligne == 2
@@ -134,7 +145,5 @@ if __name__ == '__main__':
     assert pos.quatre_positions_sauts()[0].colonne == 3
     assert pos.quatre_positions_sauts()[3].ligne == 1
     print("quatre_positions_sauts OK")
-
-    # TODO: À compléter
 
     print('Test unitaires passés avec succès!')
