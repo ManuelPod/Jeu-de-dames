@@ -18,6 +18,7 @@ class Position:
         colonne (int): La colonne associée à la position
 
     """
+
     def __init__(self, ligne, colonne):
         """Constructeur de la classe Position. Initialise les deux attributs de la classe.
 
@@ -77,6 +78,11 @@ class Position:
                 Position(haut_gauche.ligne - 1, haut_gauche.colonne - 1),
                 Position(haut_droite.ligne - 1, haut_droite.colonne + 1)]
 
+    def position_a_manger(self, position_saut):
+        direction_manger = self - position_saut
+        return Position(self.ligne + int(direction_manger.ligne / abs(direction_manger.ligne)),
+                        self.colonne + int(direction_manger.colonne / abs(direction_manger.colonne)))
+
     def __eq__(self, other):
         """Méthode spéciale indiquant à Python comment vérifier si deux positions sont égales. On compare simplement
         la ligne et la colonne de l'objet actuel et de l'autre objet.
@@ -100,6 +106,11 @@ class Position:
         """
         return hash(str(self))
 
+    def __sub__(self, position):
+        return Position(position.ligne - self.ligne, position.colonne - self.colonne)
+
+    def __add__(self, position):
+        return Position(position.ligne + self.ligne, position.colonne + self.colonne)
 
 
 if __name__ == '__main__':
