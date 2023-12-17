@@ -1,4 +1,5 @@
 # Auteurs: À compléter
+import math
 
 
 class Position:
@@ -88,8 +89,8 @@ class Position:
                 Position: la position qui est entre le pion et la position de saut
         """
         direction_manger = self - position_saut
-        return Position(self.ligne + int(direction_manger.ligne / abs(direction_manger.ligne)),
-                        self.colonne + int(direction_manger.colonne / abs(direction_manger.colonne)))
+        return Position(self.ligne + int(math.copysign(1.0, direction_manger.ligne)),
+                        self.colonne + int(math.copysign(1.0, direction_manger.colonne)))
 
     def __eq__(self, other):
         """Méthode spéciale indiquant à Python comment vérifier si deux positions sont égales. On compare simplement
