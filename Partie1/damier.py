@@ -188,7 +188,19 @@ class Damier:
         Returns:
             bool: True si une pièce de la couleur reçue peut faire un déplacement standard, False autrement.
         """
-        # TODO: À compléter
+
+        if couleur == "blanc":
+            for position in self.cases.keys:
+                if self.cases[position].est_blanc and self.piece_peut_se_deplacer(position):
+                    return True
+
+        if couleur == "noir":
+            for position in self.cases.keys:
+                if self.cases[position].est_noir and self.piece_peut_se_deplacer(position):
+                    return True
+
+        return False
+
 
     def piece_de_couleur_peut_faire_une_prise(self, couleur):
         """Vérifie si n'importe quelle pièce d'une certaine couleur reçue en argument a la possibilité de faire un
@@ -203,7 +215,18 @@ class Damier:
         Returns:
             bool: True si une pièce de la couleur reçue peut faire un saut (une prise), False autrement.
         """
-        # TODO: À compléter
+
+        if couleur == "blanc":
+            for position in self.cases.keys:
+                if self.cases[position].est_blanc and self.piece_peut_faire_une_prise(position):
+                    return True
+
+        if couleur == "noir":
+            for position in self.cases.keys:
+                if self.cases[position].est_noir and self.piece_peut_faire_une_prise(position):
+                    return True
+
+        return False
 
     def deplacer(self, position_source, position_cible):
         """Effectue le déplacement sur le damier. Si le déplacement est valide, on doit mettre à jour le dictionnaire
@@ -228,6 +251,37 @@ class Damier:
                 "erreur" autrement.
 
         """
+        #si la pièce peut se déplacer et qu'elle arrive à une extrémité
+        if self.piece_peut_se_deplacer_vers(position_source, position_cible):
+            if position_cible.ligne == 0 or position_cible.ligne == 7:
+                self.cases.pop(position_source)
+                self.cases.append(position_cible)
+                self.cases[position_cible][1] = "dame"
+                return "ok"
+            #si elle n'arrive pas à une extrémité
+            else:
+                self.cases.pop(position_source)
+                self.cases.append(position_cible)
+                return "ok"
+
+
+        #si la pièce peut faire un prise et qu'elle arrive à une extrémité
+        if self.piece_peut_faire_une_prise(position_source):
+            if position_cible.ligne == 0 or position_cible.ligne == 7:
+                self.cases.pop(position_source)
+                self.cases.append(position_cible)
+                self.cases[position_cible][1] = "dame"
+                return "prise"
+            #si elle n'arrive pas à une extrémité
+            else:
+                self.cases.pop(position_source)
+                self.cases.append(position_cible)
+                return "prise"
+        return "Erreur"
+
+
+
+
         # TODO: À compléter
 
     def __repr__(self):
@@ -285,6 +339,7 @@ if __name__ == "__main__":
     assert damier.piece_peut_sauter_vers(Position(4, 5), Position(6, 3)) is True
 
     print('Test piece_peut_sauter_vers succès!')
+
 
     print('Test unitaires passés avec succès!')
 
