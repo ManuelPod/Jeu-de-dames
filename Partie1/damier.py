@@ -201,13 +201,13 @@ class Damier:
         """
 
         if couleur == "blanc":
-            for position in self.cases.keys:
-                if self.cases[position].est_blanc and self.piece_peut_se_deplacer(position):
+            for position in self.cases:
+                if self.cases[position].est_blanche() and self.piece_peut_se_deplacer(position):
                     return True
 
         if couleur == "noir":
-            for position in self.cases.keys:
-                if self.cases[position].est_noir and self.piece_peut_se_deplacer(position):
+            for position in self.cases:
+                if self.cases[position].est_noire() and self.piece_peut_se_deplacer(position):
                     return True
 
         return False
@@ -228,13 +228,14 @@ class Damier:
         """
 
         if couleur == "blanc":
-            for position in self.cases.keys:
-                if self.cases[position].est_blanc and self.piece_peut_faire_une_prise(position):
+            for position in self.cases:
+                if self.cases[position].est_blanche() and self.piece_peut_faire_une_prise(position):
+                    print("Hola")
                     return True
 
         if couleur == "noir":
-            for position in self.cases.keys:
-                if self.cases[position].est_noir and self.piece_peut_faire_une_prise(position):
+            for position in self.cases:
+                if self.cases[position].est_noire() and self.piece_peut_faire_une_prise(position):
                     return True
 
         return False
@@ -263,16 +264,16 @@ class Damier:
 
         """
         #si la pièce peut se déplacer et qu'elle arrive à une extrémité
+        couleur = self.cases[position_source].couleur
         if self.piece_peut_se_deplacer_vers(position_source, position_cible):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)
-                self.cases.append(position_cible)
-                self.cases[position_cible][1] = "dame"
+                damier.cases[position_cible] = Piece(couleur, "dame")
                 return "ok"
             #si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
-                self.cases.append(position_cible)
+                damier.cases[position_cible] = Piece(couleur, "pion")
                 return "ok"
 
 
@@ -280,15 +281,14 @@ class Damier:
         if self.piece_peut_faire_une_prise(position_source):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)
-                self.cases.append(position_cible)
-                self.cases[position_cible][1] = "dame"
+                damier.cases[position_cible] = Piece(couleur, "dame")
                 return "prise"
             #si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
-                self.cases.append(position_cible)
+                damier.cases[position_cible] = Piece(couleur, "pion")
                 return "prise"
-        return "Erreur"
+        return "erreur"
 
 
 
@@ -369,6 +369,33 @@ if __name__ == "__main__":
     assert damier.piece_peut_se_deplacer(Position(1, 4)) is False
 
     print('Test piece_peut_se_deplacer succès!')
+
+
+    assert damier.piece_de_couleur_peut_se_deplacer("noir") is True
+    assert damier.piece_de_couleur_peut_se_deplacer("blanc") is True
+    damier.cases[Position(3, 0)] = Piece("blanc", "pion")
+    damier.cases[Position(3, 2)] = Piece("blanc", "pion")
+    damier.cases[Position(3, 4)] = Piece("blanc", "pion")
+    damier.cases[Position(3, 6)] = Piece("blanc", "pion")
+    damier.cases[Position(6, 3)] = Piece("blanc", "pion")
+    assert damier.piece_de_couleur_peut_se_deplacer("noir") is False
+    print('Test piece_de_couleur_peut_se_deplacer succès!')
+
+    damier.cases.pop(Position(4,5))
+    damier.cases.pop(Position(6,5))
+    assert damier.piece_de_couleur_peut_faire_une_prise("noir") is True
+    damier.cases.pop(Position(3, 0))
+    damier.cases.pop(Position(3, 2))
+    damier.cases.pop(Position(3, 4))
+    damier.cases.pop(Position(3, 6))
+    damier.cases.pop(Position(6, 3))
+    assert damier.piece_de_couleur_peut_faire_une_prise("blanc") is False
+    print('Test piece_de_couleur_peut_faire_une_prise succès!')
+
+    assert damier.deplacer(Position(5,2), Position(4,3)) == "ok"
+    assert damier.deplacer(Position(5,4), Position(3,2)) == "prise"
+    assert damier.deplacer(Position(6,7), Position(4,5)) == "erreur"
+    print('Test deplacer succès!')
 
     print('Test unitaires passés avec succès!')
 
