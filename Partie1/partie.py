@@ -65,7 +65,7 @@ class Partie:
         if not piece:
             erreur = 'Aucune pièce à cette position.'
             position_valide = False
-        if piece.couleur is not self.couleur_joueur_courant:
+        elif piece.couleur is not self.couleur_joueur_courant:
             erreur = 'Ce n\'est pas votre pièce!'
             position_valide = False
         return position_valide, erreur
@@ -101,9 +101,13 @@ class Partie:
 
         """
 
-        position_source = Position(input('Pièce a prendre'))
-        position_cible = Position(input('Déplacer où?'))
-        if self.position_source_valide(position_source) and self.position_source_valide(position_cible):
+        # position_source = Position(input('Pièce à prendre'))
+        # position_cible = Position(input('Déplacer où?'))
+
+        position_source = Position(input('ligne de la pièce choisie: '), input('Colonne de la pièce choisie: '))
+        position_cible = Position(input('ligne de la destination choisie: '), input('Colonne de la pièce choisie: '))
+
+        if self.position_source_valide(position_source) and self.position_cible_valide(position_cible):
             return position_source, position_cible
 
         # TODO: À compléter
@@ -139,15 +143,23 @@ class Partie:
             print("")
 
         # Demander les positions
-        self.demander_positions_deplacement()
-        position_source = self.demander_positions_deplacement()[0]
-        position_cible = self.demander_positions_deplacement()[1]
+        positions = self.demander_positions_deplacement()
+        position_source = positions[0]
+        position_cible = positions[1]
 
         # Effectuer le déplacement (à l'aide de la méthode du damier appropriée)
         self.damier.deplacer(position_source, position_cible)
 
         # Mettre à jour les attributs de la classe
-        # TODO: À compléter
+        self.doit_prendre = self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)
+        if self.damier.deplacer(position_source, position_cible) == "prise":
+            if self.doit_prendre is True:
+                self.position_source_forcee = self.position_cible
+        else:
+            if self.couleur_joueur_courant == "blanc":
+                self.couleur_joueur_courant = "noir"
+            else:
+                self.couleur_joueur_courant = "blanc"
 
     def jouer(self):
         """Démarre une partie. Tant que le joueur courant a des déplacements possibles (utilisez les méthodes
