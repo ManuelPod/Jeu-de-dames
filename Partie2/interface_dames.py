@@ -1,9 +1,9 @@
 # Auteurs: À compléter
 
 from tkinter import Tk, Label, NSEW
-from tp3.Partie2.canvas_damier import CanvasDamier
-from tp3.Partie1.partie import Partie
-from tp3.Partie1.position import Position
+from Partie2.canvas_damier import CanvasDamier
+from Partie1.partie import Partie
+from Partie1.position import Position
 
 
 class FenetrePartie(Tk):
@@ -65,8 +65,8 @@ class FenetrePartie(Tk):
             self.messages['text'] = 'Erreur: Aucune pièce à cet endroit.'
         else:
             self.messages['foreground'] = 'black'
-            self.messages['text'] = 'Pièce sélectionnée à la position {}.'.format( position)
+            self.messages['text'] = 'Pièce sélectionnée à la position {}.'.format(position)
+
+        self.partie.position_source_selectionnee = position
 
         # TODO: À continuer....
-
-

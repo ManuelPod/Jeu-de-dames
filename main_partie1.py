@@ -3,7 +3,7 @@ from Partie1.partie import Partie
 if __name__ == "__main__":
     # Point d'entrée du programme. On initialise une nouvelle partie, et on appelle la méthode jouer().
     partie = Partie()
-
+    partie.jouer()
     gagnant = partie.jouer()
 
     print("------------------------------------------------------")

@@ -1,7 +1,7 @@
 # Auteurs: Équipe IFT-1004
 
 from tkinter import Tk, Canvas
-from tp3.Partie1.position import Position
+from Partie1.position import Position
 
 
 class CanvasDamier(Canvas):
@@ -77,7 +77,7 @@ class CanvasDamier(Canvas):
             else:
                 icone = "\u26C3"
 
-            police_de_caractere = ('Deja Vu', self.n_pixels_par_case//2)
+            police_de_caractere = ('Deja Vu', self.n_pixels_par_case // 2)
             self.create_text(coordonnee_x, coordonnee_y, text=icone, font=police_de_caractere, tags='piece')
 
     def redimensionner(self, event):

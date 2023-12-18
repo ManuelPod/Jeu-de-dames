@@ -1,7 +1,8 @@
 # Auteurs: À compléter
 
-from tp3.Partie1.damier import Damier
-from tp3.Partie1.position import Position
+from Partie1.damier import Damier
+from Partie1.position import Position
+from builtins import input
 
 
 class Partie:
@@ -20,6 +21,7 @@ class Partie:
             forcée.
 
     """
+
     def __init__(self):
         """Constructeur de la classe Partie. Initialise les attributs à leur valeur par défaut. Le damier est construit
         avec les pièces à leur valeur initiales, le joueur actif est le joueur blanc, et celui-ci n'est pas forcé
@@ -57,7 +59,16 @@ class Partie:
                  deuxième élément est un message d'erreur (ou une chaîne vide s'il n'y a pas d'erreur).
 
         """
-        #TODO: À compléter
+        piece = self.damier.recuperer_piece_a_position(position_source)
+        erreur = ''
+        position_valide = True
+        if not piece:
+            erreur = 'Aucune pièce à cette position.'
+            position_valide = False
+        if piece.couleur is not self.couleur_joueur_courant:
+            erreur = 'Ce n\'est pas votre pièce!'
+            position_valide = False
+        return position_valide, erreur
 
     def position_cible_valide(self, position_cible):
         """Vérifie si la position cible est valide (en fonction de la position source sélectionnée). Doit non seulement
@@ -70,7 +81,14 @@ class Partie:
                 a pas d'erreur).
 
         """
-        #TODO: À compléter
+        if (self.damier.piece_peut_se_deplacer_vers(position_cible, self.position_source_selectionnee)
+                or self.damier.piece_peut_sauter_vers(position_cible, self.position_source_selectionnee)):
+            if self.position_source_forcee is False:
+                return True, ""
+            elif self.position_source_forcee == self.position_source_selectionnee:
+                return True, ""
+            else:
+                return False, "Non non! Vous devez faire une prise obligatoire!"
 
     def demander_positions_deplacement(self):
         """Demande à l'utilisateur les positions sources et cible, et valide ces positions. Cette méthode doit demander
@@ -82,7 +100,13 @@ class Partie:
             Position, Position: Un couple de deux positions (source et cible).
 
         """
-        #TODO: À compléter
+
+        position_source = Position(input('Pièce a prendre'))
+        position_cible = Position(input('Déplacer où?'))
+        if self.position_source_valide(position_source) and self.position_source_valide(position_cible):
+            return position_source, position_cible
+
+        # TODO: À compléter
 
     def tour(self):
         """Cette méthode effectue le tour d'un joueur, et doit effectuer les actions suivantes:
@@ -115,7 +139,9 @@ class Partie:
             print("")
 
         # Demander les positions
-        # TODO: À compléter
+        self.demander_positions_deplacement()
+        position_source = self.demander_positions_deplacement()[0]
+        position_cible = self.demander_positions_deplacement()[1]
 
         # Effectuer le déplacement (à l'aide de la méthode du damier appropriée)
         # TODO: À compléter
@@ -139,5 +165,3 @@ class Partie:
             return "noir"
         else:
             return "blanc"
-
-
