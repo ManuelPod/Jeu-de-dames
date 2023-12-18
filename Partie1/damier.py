@@ -268,12 +268,12 @@ class Damier:
         if self.piece_peut_se_deplacer_vers(position_source, position_cible):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)
-                damier.cases[position_cible] = Piece(couleur, "dame")
+                self.cases[position_cible] = Piece(couleur, "dame")
                 return "ok"
             #si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
-                damier.cases[position_cible] = Piece(couleur, "pion")
+                self.cases[position_cible] = Piece(couleur, "pion")
                 return "ok"
 
 
@@ -281,12 +281,12 @@ class Damier:
         if self.piece_peut_faire_une_prise(position_source):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)
-                damier.cases[position_cible] = Piece(couleur, "dame")
+                self.cases[position_cible] = Piece(couleur, "dame")
                 return "prise"
             #si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
-                damier.cases[position_cible] = Piece(couleur, "pion")
+                self.cases[position_cible] = Piece(couleur, "pion")
                 return "prise"
         return "erreur"
 
