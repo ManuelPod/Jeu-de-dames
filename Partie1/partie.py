@@ -144,7 +144,7 @@ class Partie:
         position_cible = self.demander_positions_deplacement()[1]
 
         # Effectuer le déplacement (à l'aide de la méthode du damier appropriée)
-        # TODO: À compléter
+        self.damier.deplacer(position_source, position_cible)
 
         # Mettre à jour les attributs de la classe
         # TODO: À compléter
