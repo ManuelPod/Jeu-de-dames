@@ -101,6 +101,7 @@ class Damier:
         """
         piece = self.recuperer_piece_a_position(position_piece)
         piece_sur_cible = self.recuperer_piece_a_position(position_cible)
+
         if not piece or not self.position_est_dans_damier(position_cible) or piece_sur_cible:
             return False
         if piece.est_pion():
@@ -129,9 +130,11 @@ class Damier:
             bool: True si la pièce peut sauter vers la position cible, False autrement.
 
         """
+        global position_a_manger
         piece = self.recuperer_piece_a_position(position_piece)
         piece_sur_cible = self.recuperer_piece_a_position(position_cible)
-        position_a_manger = position_piece.position_a_manger(position_cible)
+        if piece and not piece_sur_cible:
+            position_a_manger = position_piece.position_a_manger(position_cible)
 
         if (not piece
                 or not self.position_est_dans_damier(position_cible)
@@ -230,7 +233,6 @@ class Damier:
         if couleur == "blanc":
             for position in self.cases:
                 if self.cases[position].est_blanche() and self.piece_peut_faire_une_prise(position):
-                    print("Hola")
                     return True
 
         if couleur == "noir":
@@ -264,7 +266,8 @@ class Damier:
 
         """
         #si la pièce peut se déplacer et qu'elle arrive à une extrémité
-        couleur = self.cases[position_source].couleur
+        piece_source = self.recuperer_piece_a_position(position_source)
+        couleur = piece_source.couleur
         if self.piece_peut_se_deplacer_vers(position_source, position_cible):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)

@@ -81,10 +81,12 @@ class Partie:
                 a pas d'erreur).
 
         """
-        if (self.damier.piece_peut_se_deplacer_vers(position_cible, self.position_source_selectionnee)
-                or self.damier.piece_peut_sauter_vers(position_cible, self.position_source_selectionnee)):
-            if self.position_source_forcee is False:
+
+        if (self.damier.piece_peut_se_deplacer_vers(self.position_source_selectionnee, position_cible)
+                or self.damier.piece_peut_sauter_vers(self.position_source_selectionnee, position_cible)):
+            if not self.position_source_forcee:
                 return True, ""
+
             elif self.position_source_forcee == self.position_source_selectionnee:
                 return True, ""
             else:
@@ -104,9 +106,15 @@ class Partie:
         # position_source = Position(input('Pièce à prendre'))
         # position_cible = Position(input('Déplacer où?'))
 
-        position_source = Position(input('ligne de la pièce choisie: '), input('Colonne de la pièce choisie: '))
-        position_cible = Position(input('ligne de la destination choisie: '), input('Colonne de la pièce choisie: '))
-
+        ligne_source = int(input("ligne de la pièce choisie: "))
+        colonne_source = int(input("Colonne de la pièce choisie: "))
+        ligne_cible = int(input("ligne de la destination choisie: "))
+        colonne_cible = int(input("Colonne de la pièce choisie: "))
+        position_source = Position(ligne_source, colonne_source)
+        position_cible = Position(ligne_cible, colonne_cible)
+        self.position_source_selectionnee = position_source
+        # print(ligne_source)
+        # print(colonne_source)
         if self.position_source_valide(position_source) and self.position_cible_valide(position_cible):
             return position_source, position_cible
 
@@ -148,13 +156,13 @@ class Partie:
         position_cible = positions[1]
 
         # Effectuer le déplacement (à l'aide de la méthode du damier appropriée)
-        self.damier.deplacer(position_source, position_cible)
+        statut = self.damier.deplacer(position_source, position_cible)
 
         # Mettre à jour les attributs de la classe
         self.doit_prendre = self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)
-        if self.damier.deplacer(position_source, position_cible) == "prise":
+        if statut == "prise":
             if self.doit_prendre is True:
-                self.position_source_forcee = self.position_cible
+                self.position_source_forcee = position_cible
         else:
             if self.couleur_joueur_courant == "blanc":
                 self.couleur_joueur_courant = "noir"
