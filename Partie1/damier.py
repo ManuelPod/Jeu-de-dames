@@ -284,11 +284,13 @@ class Damier:
         if self.piece_peut_faire_une_prise(position_source):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)
+                self.cases.pop(position_source.position_a_manger(position_cible))
                 self.cases[position_cible] = Piece(couleur, "dame")
                 return "prise"
             #si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
+                self.cases.pop(position_source.position_a_manger(position_cible))
                 self.cases[position_cible] = Piece(couleur, "pion")
                 return "prise"
         return "erreur"

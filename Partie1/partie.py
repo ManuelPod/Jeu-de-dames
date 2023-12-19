@@ -163,11 +163,17 @@ class Partie:
         if statut == "prise":
             if self.doit_prendre is True:
                 self.position_source_forcee = position_cible
-        else:
-            if self.couleur_joueur_courant == "blanc":
+            elif self.couleur_joueur_courant == "blanc":
                 self.couleur_joueur_courant = "noir"
             else:
                 self.couleur_joueur_courant = "blanc"
+        elif statut == "ok":
+            if self.couleur_joueur_courant == "blanc":
+                self.couleur_joueur_courant = "noir"
+
+            else:
+                self.couleur_joueur_courant = "blanc"
+
 
     def jouer(self):
         """Démarre une partie. Tant que le joueur courant a des déplacements possibles (utilisez les méthodes
