@@ -1,6 +1,6 @@
 # Auteurs: À compléter
 
-from tkinter import Tk, Label, NSEW
+from tkinter import Tk, Button, Label, NSEW
 from Partie2.canvas_damier import CanvasDamier
 from Partie1.partie import Partie
 from Partie1.position import Position
@@ -31,6 +31,14 @@ class FenetrePartie(Tk):
         self.canvas_damier = CanvasDamier(self, self.partie.damier, 60)
         self.canvas_damier.grid(sticky=NSEW)
         self.canvas_damier.bind('<Button-1>', self.selectionner)
+
+        # Ajout d'un bouton pour quitter
+        bouton_quitter = Button(self, text="Quitter", command=self.quit)
+        bouton_quitter.grid()
+
+        # Ajout d'un bouton pour faire une nouvelle partie
+        bouton_nouvelle_partie = Button(self, text="Nouvelle Partie", command=self.nouvelle_partie)
+        bouton_nouvelle_partie.grid()
 
         # Ajout d'une étiquette d'information.
         self.messages = Label(self)
@@ -95,3 +103,8 @@ class FenetrePartie(Tk):
                 partie.effacer_selection()
 
         return selection_valide, message
+
+    def nouvelle_partie(self):
+        self.partie = Partie()
+        self.canvas_damier.damier = self.partie.damier
+        self.canvas_damier.actualiser()
