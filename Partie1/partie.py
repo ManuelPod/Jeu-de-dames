@@ -161,11 +161,12 @@ class Partie:
         self.effacer_selection()
 
         if statut == "prise":
-            # if self.doit_prendre is True:
-            #     self.position_source_forcee = position_cible
+            self.doit_prendre = self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)
+            if self.doit_prendre is True:
+                 self.position_source_forcee = position_cible
             #     self.jouer_tour(self.position_source_selectionnee)
-            # else:
-            self.changer_tour()
+            else:
+                self.changer_tour()
             return True, 'Prise faite'
         elif statut == "ok":
             self.changer_tour()
