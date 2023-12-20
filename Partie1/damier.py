@@ -103,20 +103,15 @@ class Damier:
         piece_sur_cible = self.recuperer_piece_a_position(position_cible)
 
         if not piece or not self.position_est_dans_damier(position_cible) or piece_sur_cible:
-            print("a")
             return False
         if piece.est_pion():
-            print("b")
             if piece.est_noire():
-                print("c")
                 return position_cible in position_piece.positions_diagonales_bas()
             else:
-                print("d")
                 print(position_cible)
                 print(position_piece.positions_diagonales_haut())
                 return position_cible in position_piece.positions_diagonales_haut()
         else:
-            print("e")
             return position_cible in position_piece.quatre_positions_diagonales()
 
     def piece_peut_sauter_vers(self, position_piece, position_cible):
@@ -286,7 +281,7 @@ class Damier:
             # si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
-                self.cases[position_cible] = Piece(couleur, "pion")
+                self.cases[position_cible] = Piece(couleur, piece_source.type_de_piece)
                 return "ok"
 
         # si la pièce peut faire un prise et qu'elle arrive à une extrémité
@@ -300,7 +295,7 @@ class Damier:
             else:
                 self.cases.pop(position_source)
                 self.cases.pop(self.position_a_manger(position_source, position_cible))
-                self.cases[position_cible] = Piece(couleur, "pion")
+                self.cases[position_cible] = Piece(couleur, piece_source.type_de_piece)
                 return "prise"
         return "erreur"
 
