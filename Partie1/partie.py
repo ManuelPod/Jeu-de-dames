@@ -91,6 +91,7 @@ class Partie:
                 return True, ""
             else:
                 return False, "Non non! Vous devez faire une prise obligatoire!"
+        return False, 'Mouvement impossible!'
 
     def demander_positions_deplacement(self):
         """Demande à l'utilisateur les positions sources et cible, et valide ces positions. Cette méthode doit demander
@@ -119,6 +120,45 @@ class Partie:
             return position_source, position_cible
 
         # TODO: À compléter
+
+    def jouer_tour(self, position_cible):
+        # Détermine si le joueur courant a la possibilité de prendre une pièce adverse.
+        if self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant):
+            self.doit_prendre = True
+        self.doit_prendre = self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)
+
+        # if not validation_source[0]:
+        #     self.effacer_selection()
+        #     return validation_source
+        # elif not validation_cible[0]:
+        #     self.effacer_selection()
+        #     return validation_cible
+        # else:
+        statut = self.damier.deplacer(self.position_source_selectionnee, position_cible)
+        self.effacer_selection()
+
+        if statut == "prise":
+            # if self.doit_prendre is True:
+            #     self.position_source_forcee = position_cible
+            #     self.jouer_tour(self.position_source_selectionnee)
+            # else:
+            self.changer_tour()
+            return True, 'Prise faite'
+        elif statut == "ok":
+            self.changer_tour()
+            return True, 'Mouvement fait'
+        else:
+            return False, 'Mouvement imposible'
+
+    def changer_tour(self):
+        if self.couleur_joueur_courant == "blanc":
+            self.couleur_joueur_courant = "noir"
+        else:
+            self.couleur_joueur_courant = "blanc"
+
+    def effacer_selection(self):
+        self.position_source_selectionnee = None
+        self.position_source_forcee = None
 
     def tour(self):
         """Cette méthode effectue le tour d'un joueur, et doit effectuer les actions suivantes:
@@ -174,7 +214,6 @@ class Partie:
             else:
                 self.couleur_joueur_courant = "blanc"
 
-
     def jouer(self):
         """Démarre une partie. Tant que le joueur courant a des déplacements possibles (utilisez les méthodes
         appriopriées!), un nouveau tour est joué.
@@ -183,11 +222,11 @@ class Partie:
             str: La couleur du joueur gagnant.
         """
 
-        while self.damier.piece_de_couleur_peut_se_deplacer(self.couleur_joueur_courant) or \
-                self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant):
-            self.tour()
+        # while self.damier.piece_de_couleur_peut_se_deplacer(self.couleur_joueur_courant) or \
+        #         self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant):
+        #     self.tour()
 
-        if self.couleur_joueur_courant == "blanc":
-            return "noir"
-        else:
-            return "blanc"
+        # if self.couleur_joueur_courant == "blanc":
+        #     return "noir"
+        # else:
+        #     return "blanc"

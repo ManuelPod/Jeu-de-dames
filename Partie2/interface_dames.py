@@ -57,16 +57,46 @@ class FenetrePartie(Tk):
         colonne = event.x // self.canvas_damier.n_pixels_par_case
         position = Position(ligne, colonne)
 
-        # On récupère l'information sur la pièce à l'endroit choisi.
-        piece = self.partie.damier.recuperer_piece_a_position(position)
+        # piece = self.partie.damier.recuperer_piece_a_position(position)
+        # if partie.position_source_selectionnee and piece is None:
+        #     self.messages['foreground'] = 'red'
+        #     self.messages['text'] = 'Erreur: Aucune pièce à cet endroit.'
+        #     self.partie.effacer_selection()
+        # else:
+        #     self.messages['foreground'] = 'white'
+        #     self.messages['text'] = 'Pièce sélectionnée à la position {}.'.format(position)
 
-        if piece is None:
-            self.messages['foreground'] = 'red'
-            self.messages['text'] = 'Erreur: Aucune pièce à cet endroit.'
-        else:
-            self.messages['foreground'] = 'black'
-            self.messages['text'] = 'Pièce sélectionnée à la position {}.'.format(position)
+        resultat = self.valider_selection(position)
+        self.messages['foreground'] = 'green' if resultat[0] else 'red'
+        self.messages['text'] = resultat[1]
 
-        self.partie.position_source_selectionnee = position
+        self.canvas_damier.actualiser()
 
         # TODO: À continuer....
+
+    def valider_selection(self, position):
+        partie = self.partie
+        selection_valide = True
+        message = ''
+        print('Click')
+
+        if partie.position_source_selectionnee:
+            validation_cible = partie.position_cible_valide(position)
+            if not validation_cible[0]:
+                partie.effacer_selection()
+                message = validation_cible[1]
+                selection_valide = False
+            else:
+                res = partie.jouer_tour(position)
+                message = res[1]
+        else:
+            validation_source = partie.position_source_valide(position)
+            if validation_source[0]:
+                message = 'Selection valide'
+                partie.position_source_selectionnee = position
+            else:
+                selection_valide = False
+                message = 'Selection invalide'
+                partie.effacer_selection()
+
+        return selection_valide, message

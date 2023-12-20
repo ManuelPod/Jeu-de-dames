@@ -78,7 +78,7 @@ class Damier:
             bool: True si la position est dans les bornes, False autrement.
 
         """
-        return 0 <= position.ligne <= self.n_lignes - 1 and 0 <= position.colonne <= self.n_colonnes - 1
+        return position and 0 <= position.ligne <= self.n_lignes - 1 and 0 <= position.colonne <= self.n_colonnes - 1
 
     def piece_peut_se_deplacer_vers(self, position_piece, position_cible):
         """Cette méthode détermine si une pièce (à la position reçue) peut se déplacer à une certaine position cible.
@@ -130,12 +130,9 @@ class Damier:
             bool: True si la pièce peut sauter vers la position cible, False autrement.
 
         """
-        global position_a_manger
         piece = self.recuperer_piece_a_position(position_piece)
         piece_sur_cible = self.recuperer_piece_a_position(position_cible)
-        if piece and not piece_sur_cible:
-            position_a_manger = position_piece.position_a_manger(position_cible)
-
+        position_a_manger = self.position_a_manger(position_piece, position_cible)
         if (not piece
                 or not self.position_est_dans_damier(position_cible)
                 or not self.position_est_dans_damier(position_a_manger)
@@ -215,7 +212,6 @@ class Damier:
 
         return False
 
-
     def piece_de_couleur_peut_faire_une_prise(self, couleur):
         """Vérifie si n'importe quelle pièce d'une certaine couleur reçue en argument a la possibilité de faire un
         saut, c'est à dire vérifie s'il existe une pièce d'une certaine couleur qui a la possibilité de prendre une
@@ -242,6 +238,13 @@ class Damier:
 
         return False
 
+    def position_a_manger(self, position_source, position_saut):
+        if position_saut in position_source.quatre_positions_sauts():
+            index_position_saut = position_source.quatre_positions_sauts().index(position_saut)
+            position_a_manger = position_source.quatre_positions_diagonales()[index_position_saut]
+            return position_a_manger
+        return None
+
     def deplacer(self, position_source, position_cible):
         """Effectue le déplacement sur le damier. Si le déplacement est valide, on doit mettre à jour le dictionnaire
         self.cases, en déplaçant la pièce à sa nouvelle position (et possiblement en supprimant une pièce adverse qui a
@@ -265,7 +268,7 @@ class Damier:
                 "erreur" autrement.
 
         """
-        #si la pièce peut se déplacer et qu'elle arrive à une extrémité
+        # si la pièce peut se déplacer et qu'elle arrive à une extrémité
         piece_source = self.recuperer_piece_a_position(position_source)
         couleur = piece_source.couleur
         if self.piece_peut_se_deplacer_vers(position_source, position_cible):
@@ -273,30 +276,26 @@ class Damier:
                 self.cases.pop(position_source)
                 self.cases[position_cible] = Piece(couleur, "dame")
                 return "ok"
-            #si elle n'arrive pas à une extrémité
+            # si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
                 self.cases[position_cible] = Piece(couleur, "pion")
                 return "ok"
 
-
-        #si la pièce peut faire un prise et qu'elle arrive à une extrémité
+        # si la pièce peut faire un prise et qu'elle arrive à une extrémité
         if self.piece_peut_faire_une_prise(position_source):
             if position_cible.ligne == 0 or position_cible.ligne == 7:
                 self.cases.pop(position_source)
-                self.cases.pop(position_source.position_a_manger(position_cible))
+                self.cases.pop(self.position_a_manger(position_source, position_cible))
                 self.cases[position_cible] = Piece(couleur, "dame")
                 return "prise"
-            #si elle n'arrive pas à une extrémité
+            # si elle n'arrive pas à une extrémité
             else:
                 self.cases.pop(position_source)
-                self.cases.pop(position_source.position_a_manger(position_cible))
+                self.cases.pop(self.position_a_manger(position_source, position_cible))
                 self.cases[position_cible] = Piece(couleur, "pion")
                 return "prise"
         return "erreur"
-
-
-
 
         # TODO: À compléter
 
@@ -357,7 +356,6 @@ if __name__ == "__main__":
 
     print('Test piece_peut_sauter_vers succès!')
 
-
     assert damier.piece_peut_faire_une_prise(Position(6, 5)) is True
     assert damier.piece_peut_faire_une_prise(Position(4, 5)) is True
     assert damier.piece_peut_faire_une_prise(Position(5, 2)) is False
@@ -375,7 +373,6 @@ if __name__ == "__main__":
 
     print('Test piece_peut_se_deplacer succès!')
 
-
     assert damier.piece_de_couleur_peut_se_deplacer("noir") is True
     assert damier.piece_de_couleur_peut_se_deplacer("blanc") is True
     damier.cases[Position(3, 0)] = Piece("blanc", "pion")
@@ -386,8 +383,8 @@ if __name__ == "__main__":
     assert damier.piece_de_couleur_peut_se_deplacer("noir") is False
     print('Test piece_de_couleur_peut_se_deplacer succès!')
 
-    damier.cases.pop(Position(4,5))
-    damier.cases.pop(Position(6,5))
+    damier.cases.pop(Position(4, 5))
+    damier.cases.pop(Position(6, 5))
     assert damier.piece_de_couleur_peut_faire_une_prise("noir") is True
     damier.cases.pop(Position(3, 0))
     damier.cases.pop(Position(3, 2))
@@ -397,9 +394,9 @@ if __name__ == "__main__":
     assert damier.piece_de_couleur_peut_faire_une_prise("blanc") is False
     print('Test piece_de_couleur_peut_faire_une_prise succès!')
 
-    assert damier.deplacer(Position(5,2), Position(4,3)) == "ok"
-    assert damier.deplacer(Position(5,4), Position(3,2)) == "prise"
-    assert damier.deplacer(Position(6,7), Position(4,5)) == "erreur"
+    assert damier.deplacer(Position(5, 2), Position(4, 3)) == "ok"
+    assert damier.deplacer(Position(5, 4), Position(3, 2)) == "prise"
+    assert damier.deplacer(Position(6, 7), Position(4, 5)) == "erreur"
     print('Test deplacer succès!')
 
     print('Test unitaires passés avec succès!')
