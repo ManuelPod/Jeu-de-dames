@@ -145,26 +145,28 @@ class Partie:
                 print("Cette coordonnée est invalide")
 
     def jouer_tour(self, position_cible):
+        """
+        Fait un tour avec les positions selectionné. Si le mouvement est invalide, on attend d'autres positions.
+        Args:
+            position_cible (Position):
+
+        Returns:
+            bool: True si le mouvement est valide et False.
+            str: Un message expliquant le contexte.
+
+        """
         # Détermine si le joueur courant a la possibilité de prendre une pièce adverse.
         if self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant):
             self.doit_prendre = True
         self.doit_prendre = self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)
 
-        # if not validation_source[0]:
-        #     self.effacer_selection()
-        #     return validation_source
-        # elif not validation_cible[0]:
-        #     self.effacer_selection()
-        #     return validation_cible
-        # else:
         statut = self.damier.deplacer(self.position_source_selectionnee, position_cible)
         self.effacer_selection()
 
         if statut == "prise":
             self.doit_prendre = self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)
             if self.doit_prendre is True:
-                 self.position_source_forcee = position_cible
-            #     self.jouer_tour(self.position_source_selectionnee)
+                self.position_source_forcee = position_cible
             else:
                 self.changer_tour()
             return True, 'Prise faite'
@@ -172,9 +174,11 @@ class Partie:
             self.changer_tour()
             return True, 'Mouvement fait'
         else:
-            return False, 'Mouvement imposible'
+            return False, 'Mouvement impossible'
 
     def changer_tour(self):
+        """Change le tour pour le joueur actuel.
+        """
         if self.couleur_joueur_courant == "blanc":
             self.couleur_joueur_courant = "noir"
         else:

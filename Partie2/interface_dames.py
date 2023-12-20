@@ -14,7 +14,6 @@ class FenetrePartie(Tk):
         canvas_damier (CanvasDamier): Le «widget» gérant l'affichage du damier à l'écran
         messages (Label): Un «widget» affichant des messages textes à l'utilisateur du programme
 
-        TODO: AJOUTER VOS PROPRES ATTRIBUTS ICI!
     """
 
     def __init__(self):
@@ -57,24 +56,20 @@ class FenetrePartie(Tk):
         colonne = event.x // self.canvas_damier.n_pixels_par_case
         position = Position(ligne, colonne)
 
-        # piece = self.partie.damier.recuperer_piece_a_position(position)
-        # if partie.position_source_selectionnee and piece is None:
-        #     self.messages['foreground'] = 'red'
-        #     self.messages['text'] = 'Erreur: Aucune pièce à cet endroit.'
-        #     self.partie.effacer_selection()
-        # else:
-        #     self.messages['foreground'] = 'white'
-        #     self.messages['text'] = 'Pièce sélectionnée à la position {}.'.format(position)
-
         resultat = self.valider_selection(position)
         self.messages['foreground'] = 'green' if resultat[0] else 'red'
         self.messages['text'] = resultat[1]
 
         self.canvas_damier.actualiser()
 
-        # TODO: À continuer....
-
     def valider_selection(self, position):
+        '''
+        Valide la position choisi et efface les selections si elles ne sont plus valides.
+
+        Args:
+            position (Position): La position à valider.
+        '''
+
         partie = self.partie
         selection_valide = True
         message = ''
@@ -92,11 +87,11 @@ class FenetrePartie(Tk):
         else:
             validation_source = partie.position_source_valide(position)
             if validation_source[0]:
-                message = 'Selection valide'
+                message = 'Choisissez un mouvement'
                 partie.position_source_selectionnee = position
             else:
                 selection_valide = False
-                message = 'Selection invalide'
+                message = validation_source[1]
                 partie.effacer_selection()
 
         return selection_valide, message

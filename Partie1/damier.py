@@ -324,7 +324,6 @@ if __name__ == "__main__":
 
     damier = Damier()
 
-    # TODO: À compléter
     assert damier.position_est_dans_damier(Position(0, 0)) is True
     assert damier.position_est_dans_damier(Position(8, 0)) is False
     assert damier.position_est_dans_damier(Position(0, 8)) is False
