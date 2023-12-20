@@ -1,6 +1,6 @@
 # Auteurs: À compléter
 
-from tkinter import Tk, Label, NSEW
+from tkinter import Tk, Label, NSEW, Button
 from Partie2.canvas_damier import CanvasDamier
 from Partie1.partie import Partie
 from Partie1.position import Position
@@ -13,6 +13,7 @@ class FenetrePartie(Tk):
         partie (Partie): Le gestionnaire de la partie de dame
         canvas_damier (CanvasDamier): Le «widget» gérant l'affichage du damier à l'écran
         messages (Label): Un «widget» affichant des messages textes à l'utilisateur du programme
+        bouton_quitter (label) : Un widget permettant de quitter la partie
 
         TODO: AJOUTER VOS PROPRES ATTRIBUTS ICI!
     """
@@ -36,6 +37,14 @@ class FenetrePartie(Tk):
         # Ajout d'une étiquette d'information.
         self.messages = Label(self)
         self.messages.grid()
+
+        #Ajout d'un bouton pour quitter
+        self.bouton_quitter = Button(self, text="Quitter", command=self.quit)
+        self.bouton_quitter.grid()
+
+        #Ajout d'un bouton pour faire une nouvelle partie
+        self.bouton_nouvelle_partie = Button(self, text="Nouvelle Partie", command=reset)
+        self.bouton_nouvelle_partie.grid()
 
         # Nom de la fenêtre («title» est une méthode de la classe de base «Tk»)
         self.title("Jeu de dames")
@@ -100,3 +109,4 @@ class FenetrePartie(Tk):
                 partie.effacer_selection()
 
         return selection_valide, message
+
