@@ -103,13 +103,20 @@ class Damier:
         piece_sur_cible = self.recuperer_piece_a_position(position_cible)
 
         if not piece or not self.position_est_dans_damier(position_cible) or piece_sur_cible:
+            print("a")
             return False
         if piece.est_pion():
+            print("b")
             if piece.est_noire():
+                print("c")
                 return position_cible in position_piece.positions_diagonales_bas()
             else:
+                print("d")
+                print(position_cible)
+                print(position_piece.positions_diagonales_haut())
                 return position_cible in position_piece.positions_diagonales_haut()
         else:
+            print("e")
             return position_cible in position_piece.quatre_positions_diagonales()
 
     def piece_peut_sauter_vers(self, position_piece, position_cible):

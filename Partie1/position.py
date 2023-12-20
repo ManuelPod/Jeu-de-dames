@@ -1,5 +1,4 @@
 # Auteurs: À compléter
-import math
 
 
 class Position:
@@ -42,7 +41,7 @@ class Position:
             list: La liste des deux positions.
 
         """
-        return [Position(self.ligne - 1, self.colonne + 1), Position(self.ligne + 1, self.colonne + 1)]
+        return [Position(self.ligne + 1, self.colonne - 1), Position(self.ligne + 1, self.colonne + 1)]
 
     def positions_diagonales_haut(self):
         """Retourne une liste contenant les deux positions diagonales haut à partir de la position actuelle.
@@ -51,7 +50,7 @@ class Position:
             list: La liste des deux positions.
 
         """
-        return [Position(self.ligne - 1, self.colonne - 1), Position(self.ligne + 1, self.colonne - 1)]
+        return [Position(self.ligne - 1, self.colonne - 1), Position(self.ligne - 1, self.colonne + 1)]
 
     def quatre_positions_diagonales(self):
         """Retourne une liste contenant les quatre positions diagonales à partir de la position actuelle.
@@ -60,8 +59,8 @@ class Position:
             list: La liste des quatre positions.
 
         """
-        return [self.positions_diagonales_haut()[0], self.positions_diagonales_haut()[1],
-                self.positions_diagonales_bas()[0], self.positions_diagonales_bas()[1]]
+        return [self.positions_diagonales_bas()[0], self.positions_diagonales_bas()[1],
+                self.positions_diagonales_haut()[0], self.positions_diagonales_haut()[1]]
 
     def quatre_positions_sauts(self):
         """Retourne une liste contenant les quatre "sauts" diagonaux à partir de la position actuelle. Les positions
@@ -74,10 +73,15 @@ class Position:
         bas_droite = self.positions_diagonales_bas()[1]
         haut_gauche = self.positions_diagonales_haut()[0]
         haut_droite = self.positions_diagonales_haut()[1]
-        return [Position(haut_gauche.ligne - 1, haut_gauche.colonne - 1),
-                Position(haut_droite.ligne + 1, haut_droite.colonne - 1),
-                Position(bas_gauche.ligne - 1, bas_gauche.colonne + 1),
-                Position(bas_droite.ligne + 1, bas_droite.colonne + 1)]
+        return [Position(bas_gauche.ligne + 1, bas_gauche.colonne - 1),
+                Position(bas_droite.ligne + 1, bas_droite.colonne + 1),
+                Position(haut_gauche.ligne - 1, haut_gauche.colonne - 1),
+                Position(haut_droite.ligne - 1, haut_droite.colonne + 1)]
+
+    def position_a_manger(self, position_saut):
+        direction_manger = self - position_saut
+        return Position(self.ligne + int(direction_manger.ligne / abs(direction_manger.ligne)),
+                        self.colonne + int(direction_manger.colonne / abs(direction_manger.colonne)))
 
     def __eq__(self, other):
         """Méthode spéciale indiquant à Python comment vérifier si deux positions sont égales. On compare simplement
@@ -101,6 +105,12 @@ class Position:
 
         """
         return hash(str(self))
+
+    def __sub__(self, position):
+        return Position(position.ligne - self.ligne, position.colonne - self.colonne)
+
+    def __add__(self, position):
+        return Position(position.ligne + self.ligne, position.colonne + self.colonne)
 
 
 if __name__ == '__main__':
