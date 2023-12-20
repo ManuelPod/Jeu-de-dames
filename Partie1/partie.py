@@ -63,10 +63,10 @@ class Partie:
         erreur = ''
         position_valide = True
         if not piece:
-            erreur = 'Aucune pièce à cette position.'
+            erreur = '\nAucune pièce à cette position.'
             position_valide = False
         elif piece.couleur is not self.couleur_joueur_courant:
-            erreur = 'Ce n\'est pas votre pièce!'
+            erreur = '\nCe n\'est pas votre pièce!'
             position_valide = False
         return position_valide, erreur
 
@@ -84,14 +84,28 @@ class Partie:
 
         if (self.damier.piece_peut_se_deplacer_vers(self.position_source_selectionnee, position_cible)
                 or self.damier.piece_peut_sauter_vers(self.position_source_selectionnee, position_cible)):
-            if not self.position_source_forcee:
+            if (not self.position_source_forcee
+                    and self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant) is False):
+                print(self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant))
+                print("1")
                 return True, ""
-
+            elif (not self.position_source_forcee
+                  and self.damier.piece_de_couleur_peut_faire_une_prise(self.couleur_joueur_courant)):
+                print("2")
+                if self.damier.piece_peut_sauter_vers(self.position_source_selectionnee, position_cible):
+                    print("ok")
+                    return True, ""
+                else:
+                    return False, "\nVous devez faire une prise obligatoire!"
             elif self.position_source_forcee == self.position_source_selectionnee:
+                print("4")
                 return True, ""
             else:
-                return False, "Non non! Vous devez faire une prise obligatoire!"
-        return False, 'Mouvement impossible!'
+                print("5")
+                return False, "\nVous devez faire une prise obligatoire!"
+        else:
+            print("6")
+            return False, "\nPosition cible invalide."
 
     def demander_positions_deplacement(self):
         """Demande à l'utilisateur les positions sources et cible, et valide ces positions. Cette méthode doit demander
@@ -103,23 +117,32 @@ class Partie:
             Position, Position: Un couple de deux positions (source et cible).
 
         """
+        global position_source, position_cible
+        positions_valides = False
+        while positions_valides is False:
+            try:
+                ligne_source = int(input("\nligne de la pièce choisie: "))
+                colonne_source = int(input("Colonne de la pièce choisie: "))
+                ligne_cible = int(input("ligne de la destination choisie: "))
+                colonne_cible = int(input("Colonne de la pièce choisie: "))
+                position_source = Position(ligne_source, colonne_source)
+                position_cible = Position(ligne_cible, colonne_cible)
+                self.position_source_selectionnee = position_source
+                if (self.position_source_valide(position_source)[0] is True
+                        and self.position_cible_valide(position_cible)[0] is True):
+                    positions_valides = True
+                    return position_source, position_cible
+                if self.position_source_valide(position_source)[0] is False:
+                    raise TypeError(self.position_source_valide(position_source))
+                if self.position_cible_valide(position_cible)[0] is False:
+                    raise TypeError(self.position_cible_valide(position_cible))
 
-        # position_source = Position(input('Pièce à prendre'))
-        # position_cible = Position(input('Déplacer où?'))
+            except TypeError:
+                print(self.position_source_valide(position_source)[1])
+                print(self.position_cible_valide(position_cible)[1])
 
-        ligne_source = int(input("ligne de la pièce choisie: "))
-        colonne_source = int(input("Colonne de la pièce choisie: "))
-        ligne_cible = int(input("ligne de la destination choisie: "))
-        colonne_cible = int(input("Colonne de la pièce choisie: "))
-        position_source = Position(ligne_source, colonne_source)
-        position_cible = Position(ligne_cible, colonne_cible)
-        self.position_source_selectionnee = position_source
-        # print(ligne_source)
-        # print(colonne_source)
-        if self.position_source_valide(position_source) and self.position_cible_valide(position_cible):
-            return position_source, position_cible
-
-        # TODO: À compléter
+            except ValueError:
+                print("Cette coordonnée est invalide")
 
     def jouer_tour(self, position_cible):
         # Détermine si le joueur courant a la possibilité de prendre une pièce adverse.
