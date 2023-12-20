@@ -1,6 +1,6 @@
 # Auteurs: À compléter
 
-from tkinter import Tk, Button, Label, NSEW
+from tkinter import Tk, Button, Label, NSEW, StringVar
 from Partie2.canvas_damier import CanvasDamier
 from Partie1.partie import Partie
 from Partie1.position import Position
@@ -13,7 +13,6 @@ class FenetrePartie(Tk):
         partie (Partie): Le gestionnaire de la partie de dame
         canvas_damier (CanvasDamier): Le «widget» gérant l'affichage du damier à l'écran
         messages (Label): Un «widget» affichant des messages textes à l'utilisateur du programme
-
     """
 
     def __init__(self):
@@ -32,6 +31,11 @@ class FenetrePartie(Tk):
         self.canvas_damier.grid(sticky=NSEW)
         self.canvas_damier.bind('<Button-1>', self.selectionner)
 
+        # Ajout couleur joueur courant
+        self.var = StringVar()
+        self.couleur_joueur = Label(textvariable=self.var)
+        self.var.set(self.partie.couleur_joueur_courant)
+        self.couleur_joueur.grid()
         # Ajout d'un bouton pour quitter
         bouton_quitter = Button(self, text="Quitter", command=self.quit)
         bouton_quitter.grid()
@@ -92,6 +96,7 @@ class FenetrePartie(Tk):
             else:
                 res = partie.jouer_tour(position)
                 message = res[1]
+                self.var.set(self.partie.couleur_joueur_courant)
         else:
             validation_source = partie.position_source_valide(position)
             if validation_source[0]:
