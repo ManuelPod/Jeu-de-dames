@@ -43,7 +43,7 @@ class FenetrePartie(Tk):
         self.bouton_quitter.grid()
 
         #Ajout d'un bouton pour faire une nouvelle partie
-        self.bouton_nouvelle_partie = Button(self, text="Nouvelle Partie", command=reset)
+        self.bouton_nouvelle_partie = Button(self, text="Nouvelle Partie", command=self.nouvelle_partie())
         self.bouton_nouvelle_partie.grid()
 
         # Nom de la fenêtre («title» est une méthode de la classe de base «Tk»)
@@ -110,3 +110,6 @@ class FenetrePartie(Tk):
 
         return selection_valide, message
 
+    def nouvelle_partie(self):
+        self.partie = Partie()
+        self.canvas_damier.actualiser()
